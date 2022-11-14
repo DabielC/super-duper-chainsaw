@@ -1,6 +1,7 @@
 Manager:
 	Core:
 	Guess:
+	No_word
 
 <Core>:
 	word: word
@@ -63,7 +64,7 @@ Manager:
 			size_hint_y:None
 			height:130
 
-<P>:
+<Syl_2>:
 	Label:
 		text: "The word amount must more than 2"
 		size_hint: 0.6, 0.2
@@ -74,3 +75,16 @@ Manager:
 		size_hint: 0.8, 0.2
 		pos_hint: {"x":0.1, "y":0.1}
 
+<No_word>:
+	Label:
+		text: "You need to put the word"
+		font_size:20
+		size_hint: 0.6, 0.2
+		pos_hint: {"x":0.2,"top":1}
+	Button:
+		text: "close"
+		on_press: root.diss_miss()
+		on_release:
+			app.root.current = "core"
+		size_hint: 0.8, 0.2
+		pos_hint: {"x":0.1, "y":0.1}
