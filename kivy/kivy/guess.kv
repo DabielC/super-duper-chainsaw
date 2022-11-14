@@ -1,0 +1,90 @@
+Manager:
+	Core:
+	Guess:
+	No_word
+
+<Core>:
+	word: word
+	size:root.width, root.height
+	name: "core"
+	GridLayout:
+		cols:1
+		Label:
+			font_size:50
+			text:"Put the word"
+			size_hint_y:None
+			height:50
+		Label:
+			id: name_label
+			font_size:50
+			text:"Count : 0"
+			size_hint_y:None
+			height:50
+		TextInput:
+			id:word
+			multiline:False
+			size_hint_y:None
+			height:100
+		Button:
+			text:"Submit"
+			on_press: root.pt()
+			size_hint_y:None
+			height:100
+		Button:
+			text:"Start"
+			size_hint_y:None
+			height:100
+			on_press: root.pass_word()
+			on_release:
+				app.root.current = "guess"
+				root.manager.transition.direction = "left"
+
+<Guess>:
+	miss_word: miss_word
+	answer: answer
+	btn: btn
+	name: "guess"
+	GridLayout:
+		cols:1
+		Label:
+			id: miss_word
+			text: ""
+			font_size:50
+			size_hint_y:None
+			height:160
+		TextInput:
+			id: answer
+			multiline:False
+			size_hint_y:None
+			height:110
+		Button:
+			id: btn
+			text: "Show splited word"
+			on_press: root.split_word()
+			size_hint_y:None
+			height:130
+
+<Syl_2>:
+	Label:
+		text: "The word amount must more than 2"
+		size_hint: 0.6, 0.2
+		pos_hint: {"x":0.2,"top":1}
+	Button:
+		text: "close"
+		on_press: root.diss_miss()
+		size_hint: 0.8, 0.2
+		pos_hint: {"x":0.1, "y":0.1}
+
+<No_word>:
+	Label:
+		text: "You need to put the word"
+		font_size:20
+		size_hint: 0.6, 0.2
+		pos_hint: {"x":0.2,"top":1}
+	Button:
+		text: "close"
+		on_press: root.diss_miss()
+		on_release:
+			app.root.current = "core"
+		size_hint: 0.8, 0.2
+		pos_hint: {"x":0.1, "y":0.1}
