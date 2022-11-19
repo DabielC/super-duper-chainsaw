@@ -10,9 +10,10 @@ from kivy.uix.popup import Popup
 import random
 
 
-Window.size = (300, 400)
+Window.size = (500, 400)
 Name = []
-score = []
+full_score = []
+score = 0
 
 class Core(Screen):
 	def __init__(self,**kwargs):
@@ -29,46 +30,61 @@ class Core(Screen):
 		elif 1 <= len(self.word.text) <= 2:
 			show_popup()
 
-		return self.list1, self.cnt
 	def pass_word(self):
 		if self.list1 != []:
 			Name.append(self.list1)
-			score.append(int(self.cnt))
+			full_score.append(int(self.cnt))
 		else:
 			show_popup1()
+
+def spliter(Text):
+	splited = []
+	do = Text
+	checker = Text.copy()
+	for i in range(len(do)):
+		quest = list(random.choice(do))
+		q_copy = ''.join(quest.copy())
+		times = random.randint(2,len(quest)-1)
+		for i in range(times):
+			index_quest = random.randint(2, len(quest)-1)
+			if quest[index_quest] != ' ':
+				quest[index_quest] = '_'
+			elif quest[index_quest] == ' ':
+				times += 1
+		splited.append(''.join(quest))
+		do.remove(q_copy)
+	return splited, checker
 
 class Guess(Screen):
 	def __init__(self,**kwargs):
 		super().__init__(**kwargs)
 		self.num = 0
-	def split_word(self):
-		if Name[0] != []:
-			self.btn.text = "Submit"
-			quest = list(random.choice(Name[0]))
-			q_copy = ''.join(quest.copy())
-			global temp
-			temp = ''.join(quest)
-			print(temp)
-			times = random.randint(2,len(quest)-1)
+	def on_enter(self):
+		self.splited, self.check = spliter(Name[0])
+		self.miss_word.text = self.splited[0]
+		self.i = len(self.splited) - 1
 
-			for i in range(times):
-				index_quest = random.randint(2, len(quest)-1)
-				if quest[index_quest] != ' ':
-					quest[index_quest] = '_'
-				elif quest[index_quest] == ' ':
-					times += 1
-			self.miss_word.text = ''.join(quest)
-			Name[0].remove(q_copy)
-
-			if self.answer.text == temp:
+	def runner(self):
+		if self.i > 0:
+			self.miss_word.text = self.splited[self.i]
+			self.i -= 1
+			if self.answer.text in self.check:
 				self.num += 1
 			self.answer.text = ""
 		else:
-			if self.answer.text == temp:
+			if self.answer.text in self.check:
 				self.num += 1
-			temp = 0
-			self.ids.miss_word.text = "%d" %(self.num)
-			self.answer.text = ""
+				score = self.num
+				print(score,full_score[0])
+				self.answer.text = ""
+			else:
+				score = self.num
+				print(score,full_score[0])
+				self.answer.text = ""
+
+class conclusion(Screen):
+	pass
+
 
 class No_word(Screen):
 	def diss_miss(self):
@@ -95,8 +111,8 @@ class Manager(ScreenManager):
 
 kv = Builder.load_file("guess.kv")
 
-class guessApp(App):
+class Memorry_helperApp(App):
 	def build(self):
 		return kv
 
-guessApp().run()
+Memorry_helperApp().run()

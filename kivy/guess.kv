@@ -1,7 +1,8 @@
 Manager:
 	Core:
 	Guess:
-	No_word
+	No_word:
+	conclusion:
 
 <Core>:
 	word: word
@@ -23,6 +24,7 @@ Manager:
 		TextInput:
 			id:word
 			multiline:False
+			on_text_validate: root.pt()
 			size_hint_y:None
 			height:100
 		Button:
@@ -55,14 +57,17 @@ Manager:
 		TextInput:
 			id: answer
 			multiline:False
+			on_text_validate: root.runner()
 			size_hint_y:None
 			height:110
 		Button:
 			id: btn
-			text: "Show splited word"
-			on_press: root.split_word()
+			text:"Submit"
+			on_press: root.runner()
 			size_hint_y:None
 			height:130
+
+<conclusion>:
 
 <Syl_2>:
 	Label:
