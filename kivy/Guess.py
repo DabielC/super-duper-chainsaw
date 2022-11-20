@@ -22,13 +22,17 @@ class Core(Screen):
 		self.list1 = []
 		self.cnt = 0
 	def pt(self):
-		if len(self.word.text) > 2:
-			self.list1.append(self.word.text)
+		if self.word.text not in self.list1:
+			if len(self.word.text) > 2:
+				self.list1.append(self.word.text)
+				self.word.text=""
+				self.cnt += 1
+				self.ids.name_label.text = "Count : " + str(self.cnt)
+			elif 1 <= len(self.word.text) <= 2:
+				show_popup()
+		else:
 			self.word.text=""
-			self.cnt += 1
-			self.ids.name_label.text = "Count : " + str(self.cnt)
-		elif 1 <= len(self.word.text) <= 2:
-			show_popup()
+
 
 	def pass_word(self):
 		if self.list1 != []:
@@ -36,6 +40,7 @@ class Core(Screen):
 			full_score.append(int(self.cnt))
 		else:
 			show_popup1()
+
 
 def spliter(Text):
 	splited = []
@@ -61,34 +66,41 @@ class Guess(Screen):
 		self.num = 0
 	def on_enter(self):
 		self.splited, self.check = spliter(Name[0])
-		self.miss_word.text = self.splited[0]
+		self.miss_word.text = "[%d]\n" %(self.num) + self.splited[0]
 		self.i = len(self.splited) - 1
 
 	def runner(self):
 		if self.i > 0:
-			self.miss_word.text = self.splited[self.i]
-			self.i -= 1
+			self.miss_word.text = "[%d]\n" %(self.num) + self.splited[self.i]
 			if self.answer.text in self.check:
 				self.num += 1
+				self.miss_word.text = "[%d]\n" %(self.num) + self.splited[self.i]
+				self.i -= 1
+			else:
+				self.miss_word.text = "[%d]\n" %(self.num) + self.splited[self.i]
+				self.i -= 1
 			self.answer.text = ""
 		else:
 			if self.answer.text in self.check:
 				self.num += 1
 				score = self.num
-				print(score,full_score[0])
+				self.miss_word.text = "%d/" %score + "%d" %full_score[0]
 				self.answer.text = ""
 			else:
 				score = self.num
-				print(score,full_score[0])
+				self.miss_word.text = "%d/" %score + "%d" %full_score[0]
 				self.answer.text = ""
-
-class conclusion(Screen):
-	pass
 
 
 class No_word(Screen):
 	def diss_miss(self):
 		need_word.dismiss()
+
+def show_popup2():
+	show = No_word()
+	global need_word
+	need_word = Popup(title="", content=show, size_hint=(None,None), size=(300,300))
+	need_word.open()
 
 def show_popup1():
 	show = No_word()
